@@ -3,12 +3,26 @@ require "net/irc"
 require "pp"
 require "engtagger"
 
+class FileCacher
+  def initialize(filename)
+    @filename = filename
+    @lines = File.readlines(@filename)
+    @last_mtime = File.mtime(@filename)
+  end
+  def lines
+    if File.mtime(@filename) > @last_mtime
+      @lines = File.readlines(@filename)
+    end
+    @lines
+  end
+end
+
 class SimpleClient < Net::IRC::Client
   def initialize(*args)
-    @words = File.readlines("words.txt")
-    @verbs = File.readlines("verbs.txt")
-    @subjects = File.readlines("subjects.txt")
-    @fillers = File.readlines("filler.txt")
+    @words = FileCacher.new("words.txt")
+    @verbs = FileCacher.new("verbs.txt")
+    @subjects = FileCacher.new("subjects.txt")
+    @fillers = FileCacher.new("filler.txt")
     super
   end
 
@@ -53,7 +67,7 @@ class SimpleClient < Net::IRC::Client
   end
 
   def get_random_word
-    @words.sample.strip
+    @words.lines.sample.strip
   end
 
   def get_random_phrase
@@ -61,17 +75,17 @@ class SimpleClient < Net::IRC::Client
   end
 
   def random_filler
-    @fillers.sample.strip
+    @fillers.lines.sample.strip
   end
 
   def random_subject
     if rand(1..100) > 50 
-      @subjects.sample.strip
+      @subjects.lines.sample.strip
     end
   end
   
   def random_verb
-    @verbs.sample.strip
+    @verbs.lines.sample.strip
   end
 
 end
