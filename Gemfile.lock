@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    engtagger (0.2.0)
+    net-irc (0.0.9)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  engtagger
+  net-irc
+
+BUNDLED WITH
+   1.12.5
