@@ -5,6 +5,10 @@ require "engtagger"
 
 class SimpleClient < Net::IRC::Client
   def initialize(*args)
+    @words = File.readlines("words.txt")
+    @verbs = File.readlines("verbs.txt")
+    @subjects = File.readlines("subjects.txt")
+    @fillers = File.readlines("filler.txt")
     super
   end
 
@@ -49,7 +53,7 @@ class SimpleClient < Net::IRC::Client
   end
 
   def get_random_word
-    File.readlines("words.txt").sample.strip
+    @words.sample.strip
   end
 
   def get_random_phrase
@@ -57,17 +61,17 @@ class SimpleClient < Net::IRC::Client
   end
 
   def random_filler
-    File.readlines("filler.txt").sample.strip
+    @fillers.sample.strip
   end
 
   def random_subject
     if rand(1..100) > 50 
-      File.readlines("subjects.txt").sample.strip
+      @subjects.sample.strip
     end
   end
   
   def random_verb
-    File.readlines("verbs.txt").sample.strip
+    @verbs.sample.strip
   end
 
 end
